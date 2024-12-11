@@ -1,4 +1,6 @@
 <?php
+ob_start(); // Start output buffering
+
 // Start the session as early as possible
 session_start();
 
@@ -31,6 +33,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($users[$username]) && $users[$username] === $password) {
         $_SESSION['username'] = $username;
         $_SESSION['logged_in'] = true;
+        
+        // Clear any buffered output
+        ob_end_clean();
+        
         header('Location: /index.html');
         exit();
     } else {
@@ -40,4 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 // Include the login page
 include 'login.html';
+
+// Send buffered output
+ob_end_flush();
 ?>
