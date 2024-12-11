@@ -8,7 +8,7 @@
 </head>
 <body>
     <?php if (!empty($error)): ?>
-        <div style="color: red;"><?php echo $error; ?></div>
+        <div style="color: red;"><?php echo htmlspecialchars($error); ?></div>
     <?php endif; ?>
     
     <div class="login-box">
