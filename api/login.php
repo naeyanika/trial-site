@@ -39,5 +39,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 // Include the login page
-include '../login.html';
+include '/login.html';
 ?>
