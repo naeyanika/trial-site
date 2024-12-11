@@ -1,20 +1,24 @@
 <?php
-ob_start(); // Start output buffering
+ob_start();
+
+// Start session as early as possible
 session_start();
+
+// Set session parameters (moved after session_start())
 session_set_cookie_params(3600);
 
-// Periksa apakah sesi masih aktif
+// Initialize session timeout check
 if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 3600)) {
-    // Sesi berakhir, logout pengguna
+    // Session expired, logout user
     session_destroy();
     header('Location: /login.html');
     exit();
 }
 
-// Perbarui waktu aktivitas sesi
+// Update session activity time
 $_SESSION['last_activity'] = time();
 
-// Array untuk menyimpan username dan password
+// User authentication
 $users = [
     'joey' => 'admin',
     'audit' => 'audit'
@@ -29,13 +33,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($users[$username]) && $users[$username] === $password) {
         $_SESSION['username'] = $username;
         $_SESSION['logged_in'] = true;
-        header('Location: /index.html'); 
+        
+        // Clear any buffered output
+        ob_end_clean();
+        
+        header('Location: /index.html');
         exit();
     } else {
-        $error = "Username atau password salah!";
+        $error = "Username atau Password Salah";
     }
 }
 
-include '../login.html'; // Adjust path to point to login.html outside of /api
+// Absolute path handling
+$login_html_path = $_SERVER['DOCUMENT_ROOT'] . '/login.html';
+
+if (file_exists($login_html_path)) {
+    include $login_html_path;
+} else {
+    echo "Salah nama pengguna atau kata sandi, silakan kontak administrator!";
+}
+
 ob_end_flush();
 ?>
