@@ -1,10 +1,8 @@
 <?php
-ob_start();
-
-// Start session as early as possible
+// Start the session as early as possible
 session_start();
 
-// Set session parameters (moved after session_start())
+// Set the session cookie parameters
 session_set_cookie_params(3600);
 
 // Initialize session timeout check
@@ -33,10 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($users[$username]) && $users[$username] === $password) {
         $_SESSION['username'] = $username;
         $_SESSION['logged_in'] = true;
-        
-        // Clear any buffered output
-        ob_end_clean();
-        
         header('Location: /index.html');
         exit();
     } else {
@@ -44,14 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-// Absolute path handling
-$login_html_path = $_SERVER['DOCUMENT_ROOT'] . '/login.html';
-
-if (file_exists($login_html_path)) {
-    include $login_html_path;
-} else {
-    echo "Salah nama pengguna atau kata sandi, silakan kontak administrator!";
-}
-
-ob_end_flush();
+// Include the login page
+include '../login.html';
 ?>
